@@ -118,7 +118,7 @@ python3 eval_curve.py --dir=[save dir] \
                  --ckpt=[curve ckpt]
 ```
 
-To find the optimal model and effective unlearning region, use `plot_region.py`.
+To find the optimal model and effective unlearning region, use `plot_region.py` with the pathway obtained from `eval_curve.py`.
 
 
 ## How to Cite
