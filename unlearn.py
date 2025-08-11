@@ -34,8 +34,6 @@ def adjust_learning_rate(optimizer, lr):
 
 '''basic func'''
 def training_step(model, batch, criterion):
-    # torch.cuda.synchronize()
-    time_s = time.time()
 
     device = next(model.parameters()).device
     images, clabels = batch
@@ -43,9 +41,6 @@ def training_step(model, batch, criterion):
     out = model(images)  # Generate predictions
     loss = criterion(out, clabels)  # Calculate loss
 
-    # torch.cuda.synchronize()
-    time_e = time.time()
-    # print('time_e-time_s', time_e-time_s)
     return loss
 
 def training_step_ga_plus(model, batch, criterion, beta):
@@ -100,7 +95,6 @@ def training_step_dynamic(model, batch, criterion, args):
     else:
         _, _, forget_acc = _,_,forget_base
 
-    print('forget_acc', forget_acc, end='  ')
     if forget_acc <= forget_base:
         beta = 0
     elif forget_acc > forget_base and (forget_acc-forget_base)/forget_base < (retain_acc-retrain_base)/retrain_base:
@@ -108,7 +102,6 @@ def training_step_dynamic(model, batch, criterion, args):
     else:
         beta = 0.5
 
-    print(beta, end=' ')
 
     loss = loss_retain - beta*loss_forget
     return loss, loss_retain, loss_forget, beta
@@ -184,14 +177,10 @@ def fit_one_cycle(
         time_all += time4-time1
     torch.cuda.synchronize()
     time_end = time.time()
-    print('\ntime_forward, time_backward, time_update, time_all, time_all2', time_forward, time_backward, time_update, time_all, time_end-time_start)
-
 
     scheduler.step()
 
-    # print('='*33)
     # print(f'time_forward_2:{time_forward_2}, time_forward:{time_forward}, time_backward{time_backward}')
-    # print('='*33)
 
     return loss_sum/test_size, beta
 

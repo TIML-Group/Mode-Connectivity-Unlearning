@@ -17,46 +17,6 @@ from arg_parser import parse_args
 from evaluation import SVC_MIA
 
 
-# parser = argparse.ArgumentParser(description='DNN curve evaluation')
-# parser.add_argument('--dir', type=str, default='/tmp/eval', metavar='DIR',
-#                     help='training directory (default: /tmp/eval)')
-#
-# parser.add_argument('--forget_ratio', type=float, default=0.1, metavar='UNLEARN',
-#                     help='forget ratio (default: 0.1)')
-# parser.add_argument('--unlearn_type', type=str, default='random', metavar='UNLEARN',
-#                     help='unlearn type (default: random)')
-#
-# parser.add_argument('--num_points', type=int, default=20, metavar='N',
-#                     help='number of points on the curve (default: 61)')
-#
-# parser.add_argument('--dataset', type=str, default='CIFAR10', metavar='DATASET',
-#                     help='dataset name (default: CIFAR10)')
-# parser.add_argument('--use_test', action='store_true',
-#                     help='switches between validation and test set (default: validation)')
-# parser.add_argument('--transform', type=str, default='VGG', metavar='TRANSFORM',
-#                     help='transform name (default: VGG)')
-# parser.add_argument('--data_path', type=str, default=None, metavar='PATH',
-#                     help='path to datasets location (default: None)')
-# parser.add_argument('--batch_size', type=int, default=128, metavar='N',
-#                     help='input batch size (default: 128)')
-# parser.add_argument('--num_workers', type=int, default=4, metavar='N',
-#                     help='number of workers (default: 4)')
-#
-# parser.add_argument('--model', type=str, default=None, metavar='MODEL',
-#                     help='model name (default: None)')
-# parser.add_argument('--curve', type=str, default=None, metavar='CURVE',
-#                     help='curve type to use (default: None)')
-# parser.add_argument('--num_bends', type=int, default=3, metavar='N',
-#                     help='number of curve bends (default: 3)')
-#
-# parser.add_argument('--ckpt', type=str, default=None, metavar='CKPT',
-#                     help='checkpoint to eval (default: None)')
-#
-# parser.add_argument('--wd', type=float, default=1e-4, metavar='WD',
-#                     help='weight decay (default: 1e-4)')
-#
-# args = parser.parse_args()
-
 
 args = parse_args()
 

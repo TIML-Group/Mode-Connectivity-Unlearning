@@ -7,6 +7,7 @@ import curves
 import unlearn
 from torch.utils.data import DataLoader, Subset, dataset, Dataset, random_split
 import random
+import time
 
 def l2_regularizer(weight_decay):
     def regularizer(model):

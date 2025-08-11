@@ -42,7 +42,6 @@ if __name__ == '__main__':
         dir = f'{args.dir}{args.unlearn_method}_epoch{args.epochs}_mask{args.mask_ratio}_kr{args.kr}_retain{args.retain_ratio}_beta{args.beta}_seed{args.seed}/'
         # dir = f'{args.dir}seed_{args.slseed}/'
 
-    print('\n=====save_dir=====', dir, '\n')
     if not os.path.exists(dir):
         os.makedirs(dir, exist_ok=True)
 
@@ -84,7 +83,6 @@ if __name__ == '__main__':
     if args.curve is None:
         model = architecture.base(num_classes=num_classes, **architecture.kwargs)
 
-        print('args.original_pth', args.original_pth)
         if args.original_pth is not None:
             checkpoint_original = torch.load(args.original_pth)
 
@@ -118,9 +116,6 @@ if __name__ == '__main__':
             # parameters_list = [key for key, value in mask.items() if value == 1]
 
         curve = getattr(curves, args.curve)
-        print('-----'*10)
-        print('args.fix_start, args.fix_end', args.fix_start, args.fix_end)
-        print('-----'*10)
 
         model = curves.CurveNet(
             num_classes,
@@ -172,12 +167,6 @@ if __name__ == '__main__':
                     flag_false += 1
                     len_false += len(param.flatten())
 
-    print('======'*10)
-    print(f'flag_all: {flag_all} flag_false: {flag_false}, flag_false/flag_all: {flag_false/flag_all}, len_all: {len_all}, len_false: {len_false}, len_false/len_all: {len_false/len_all}')
-    print('loaders[train], loaders[train_retain], loaders[train_forget]', len(loaders['train'].dataset), len(loaders['train_retain'].dataset), len(loaders['train_forget'].dataset))
-    print('======'*10)
-
-
     criterion = F.cross_entropy
     optimizer = torch.optim.SGD(
         filter(lambda param: param.requires_grad, model.parameters()),
@@ -188,7 +177,6 @@ if __name__ == '__main__':
 
     if args.milestones:
         milestones = np.array(args.milestones.split(',')).astype(int)  # [82,122,163]
-        print('===milestones===', milestones)
         scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=milestones, gamma=0.1, last_epoch=-1)
     else:
         scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.epochs)
@@ -197,8 +185,6 @@ if __name__ == '__main__':
     proj_name = '{}_{}_{}_{}{}_seed2'.format(args.model, args.dataset, args.unlearn_method, args.unlearn_type, int(args.forget_ratio*100))
     watermark = "s{}_lr{}_b{}".format(args.seed, args.lr, args.beta)
     # watermark = "s{}_lr{}".format(args.seed_10, args.lr)
-    print('\nproj_name', proj_name)
-    print('watermark', watermark, '\n')
 
     wandb.init(project=proj_name, name=watermark)
     wandb.config.update(args)
@@ -222,14 +208,9 @@ if __name__ == '__main__':
     if args.unlearn_method in ['curve', 'dynamic']:
         len_retain = len(loaders['train_retain'].dataset)
         len_retain_ = int(len_retain * args.retain_ratio)
-        print('args.retain_ratio', args.retain_ratio, 'len_retain', len_retain, 'len_retain_', len_retain_)
 
         retain_data, _ = random_split(loaders['train_retain'].dataset, [len_retain_, len_retain - len_retain_])
-        print('random_split')
-
         unlearning_data = utils.LossData2(forget_data=loaders['train_forget'].dataset, retain_data=retain_data)
-        print('unlearning_data')
-
         train_sampler = DistributedSampler(unlearning_data) if use_ddp else None
         train_loader = DataLoader(
             unlearning_data, batch_size=args.batch_size, shuffle=True, pin_memory=True
@@ -255,7 +236,6 @@ if __name__ == '__main__':
 
     beta = args.beta
     for epoch in range(start_epoch, args.epochs + 1):
-        print('+++++++++++epoch', epoch)
 
         time_ep = time.time()
 
@@ -280,7 +260,6 @@ if __name__ == '__main__':
         log_res =  {'train_retain_acc': train_retain_acc, 'train_forget_acc': train_forget_acc, 'test_retain_acc': test_retain_acc,
              "lr": optimizer.param_groups[0]["lr"],
              "train_time": training_time, "test_time": time.time()- time_test}
-        print(log_res)
 
         wandb.log(
             {'train_retain_acc': train_retain_acc, 'train_forget_acc': train_forget_acc, 'test_retain_acc': test_retain_acc,
@@ -310,7 +289,6 @@ if __name__ == '__main__':
 
     ############### save file
     if args.epochs % args.save_freq != 0:
-        print('args.epochs % args.save_freq', args.epochs % args.save_freq)
         utils.save_checkpoint(
             dir,
             args.epochs,
