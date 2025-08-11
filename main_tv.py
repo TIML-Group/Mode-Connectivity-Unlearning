@@ -19,10 +19,11 @@ if __name__ == '__main__':
     args = parse_args()
 
     dir = f'{args.dir}{args.unlearn_method}/'
-    print('\n=====save_dir=====', dir, '\n')
     if not os.path.exists(dir):
         os.makedirs(dir, exist_ok=True)
 
+    torch.manual_seed(args.seed)
+    torch.cuda.manual_seed(args.seed)
     loaders, num_classes = data.loaders(
         args.dataset,
         args.unlearn_type,
@@ -71,7 +72,6 @@ if __name__ == '__main__':
              'tr_acc' : test_retain_acc,
              'tf_acc' : test_forget_acc,
              'RTE' : training_time_sum}
-    print(dict)
 
     utils.save_checkpoint(
         dir,

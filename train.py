@@ -51,6 +51,9 @@ if __name__ == '__main__':
         f.write('\n')
 
 
+    torch.manual_seed(args.seed)
+    torch.cuda.manual_seed(args.seed)
+
     loaders, num_classes = data.loaders(
         args.dataset,
         args.unlearn_type,
@@ -64,8 +67,6 @@ if __name__ == '__main__':
 
 
     torch.backends.cudnn.benchmark = True
-    torch.manual_seed(args.seed)
-    torch.cuda.manual_seed(args.seed)
 
     architecture = getattr(models, args.model)
 

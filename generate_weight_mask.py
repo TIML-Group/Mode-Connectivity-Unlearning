@@ -1,3 +1,4 @@
+'''generate mask for MCU'''
 import copy
 import os
 from collections import OrderedDict
@@ -17,7 +18,6 @@ import models
 
 
 def save_gradient_ratio(data_loaders, model, criterion, args, save_dir):
-    print('save_gradient_ratio')
     optimizer = torch.optim.SGD(
         model.parameters(),
         args.lr,
@@ -73,8 +73,6 @@ def save_gradient_ratio(data_loaders, model, criterion, args, save_dir):
                 if param.grad is not None:
                     gradients_forget[name] += param.grad.data
 
-    # print('++++++gradients_retain', gradients_retain)
-    # print('======gradients_forget', gradients_forget)
     parameter_number = 0
     param_len_dict = {}
     with torch.no_grad():
@@ -88,7 +86,6 @@ def save_gradient_ratio(data_loaders, model, criterion, args, save_dir):
 
     threshold_list = [0.5]
     threshold_retain_list = [0.0, 0.1, 0.2, 0.3, 0.4]
-    print('threshold_list, threshold_retain_list', 'parameter_number', threshold_list, threshold_retain_list, parameter_number)
 
     sorted_gradients_retain = dict(sorted(gradients_retain.items(), key=lambda item: item[1], reverse=True))  # 1146842
     for kr in threshold_retain_list:
@@ -104,11 +101,9 @@ def save_gradient_ratio(data_loaders, model, criterion, args, save_dir):
                 real_kr = exist_parameter_number/parameter_number
             else:
                 filtered_gradients_retain[key] = gradients_forget[key]
-        print('======='*55, 'kr', kr, real_kr)
 
         sorted_gradients = dict(sorted(filtered_gradients_retain.items(), key=lambda item: item[1], reverse=True))
         for i in threshold_list:
-            print('==i', i, end=' ')
             # Step 2: filter gradients_forget
             forget_threshold = int(parameter_number * i)
             mask = {}
@@ -123,7 +118,6 @@ def save_gradient_ratio(data_loaders, model, criterion, args, save_dir):
                     mask[key] = 0
 
             torch.save(mask, os.path.join(save_dir, "mask_k{}_kr{}.pt".format(i, kr)))
-            print("mask_k{}_kr{}_realk{}_realkr{}".format(i, kr, real_k, real_kr))
 
 def main():
     args = parse_args()
@@ -159,7 +153,6 @@ def main():
 
     save_dir = 'vit_imagenet_random_20/mask/'
     os.makedirs(save_dir, exist_ok=True)
-    print(save_dir)
 
     if args.original_pth is not None:
         checkpoint_original = torch.load(args.original_pth, weights_only=True)

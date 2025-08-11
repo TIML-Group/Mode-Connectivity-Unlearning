@@ -63,7 +63,6 @@ for file_name in os.listdir(base_dir):
 
 
     plt.figure(figsize=(5, 3.8))
-    print('style.available', plt.style.available)
     plt.style.use('seaborn-v0_8-whitegrid')
 
     plt.rcParams.update({"font.family": 'Times New Roman', 'font.size': 27,

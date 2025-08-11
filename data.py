@@ -133,7 +133,6 @@ def loaders(dataset, unlearn_type, forget_ratio, path, batch_size, num_workers, 
             valdir,
             transform=transform.test
         )
-        print(f'loaded train_set:{len(train_set)} test_set:{len(test_set)}')
         loader_res = {
                'train': torch.utils.data.DataLoader(
                    train_set,
@@ -164,7 +163,6 @@ def loaders(dataset, unlearn_type, forget_ratio, path, batch_size, num_workers, 
             transform=transform.test
         )
 
-        print(f'Loaded ImageNet-100 train_set:{len(train_set)} test_set:{len(test_set)}')
         loader_res = {
             'train': DataLoader(
                 train_set,
@@ -211,18 +209,7 @@ def loaders(dataset, unlearn_type, forget_ratio, path, batch_size, num_workers, 
         forget_size = int(dataset_len * forget_ratio)
         retain_size = dataset_len - forget_size
 
-        torch.manual_seed(42)
         retain_ds, forget_ds = random_split(train_set, [retain_size, forget_size])
-
-        print('Check random: retain_ds datapoint {1-5}: ', end='')
-        for i in range(5):
-            data, label = retain_ds[i]
-            print(label, end=' ')
-        print('Check random: forget_ds datapoint {1-5}: ', end='')
-        for i in range(5):
-            data, label = forget_ds[i]
-            print(label, end=' ')
-        print('\n\n')
 
         loader_res.update({
            'train_retain': torch.utils.data.DataLoader(
@@ -240,11 +227,8 @@ def loaders(dataset, unlearn_type, forget_ratio, path, batch_size, num_workers, 
                pin_memory=True
            )
         })
-        print('random forgetting', len(retain_ds), len(forget_ds))
     elif unlearn_type == 'class':
-        random.seed(42)
         random_class = random.randint(0, num_classes-1)
-        print('random_class', random_class)
 
         forget_indices_train = [i for i in range(len(train_set)) if train_set.targets[i] == random_class]
         retain_indices_train = [i for i in range(len(train_set)) if train_set.targets[i] != random_class]
@@ -286,7 +270,6 @@ def loaders(dataset, unlearn_type, forget_ratio, path, batch_size, num_workers, 
                pin_memory=True
            ),
         })
-        print('class forgetting', len(retain_train_ds), len(forget_train_ds), len(retain_test_ds), len(forget_test_ds))
 
     return loader_res, num_classes
 

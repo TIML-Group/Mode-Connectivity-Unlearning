@@ -68,12 +68,11 @@ file_name = args.ckpt.split('/')[-2]
 # epoch_num = epoch_num.split('-')[-1]
 # epoch_num = epoch_num.split('.')[0]
 # file_name = f'epoch{epoch_num}_'+'_'.join(file_name)
-print('*'*33)
-print('file_name', file_name)
-print('*'*33)
 
 torch.backends.cudnn.benchmark = True
 
+torch.manual_seed(args.seed)
+torch.cuda.manual_seed(args.seed)
 loaders, num_classes = data.loaders(
     args.dataset,
     args.unlearn_type,
@@ -144,18 +143,15 @@ t = torch.FloatTensor([0.0]).cuda()
 for i, t_value in enumerate(ts):
     time_start = time.time()
     t.data.fill_(t_value)
-    print('t_value', t_value, 't', t)
     weights = model.weights(t)
     if previous_weights is not None:
         dl[i] = np.sqrt(np.sum(np.square(weights - previous_weights)))
     previous_weights = weights.copy()
 
-    print('calculate weights time', time.time() - time_start)
     time_start = time.time()
 
     utils.update_bn(loaders['train'], model, t=t)
     # utils.update_bn(loaders['train_retain'], model, t=t)
-    print('update bn time', time.time() - time_start)
     time_start = time.time()
 
     tr_res = utils.test(loaders['train_retain'], model, criterion, regularizer, t=t)
@@ -166,7 +162,6 @@ for i, t_value in enumerate(ts):
         tf_res_2 = {'loss': 0, 'nll': 0, 'accuracy': 0}
     te_res = utils.test(loaders['test_retain'], model, criterion, regularizer, t=t)
 
-    print('calculate acc time', time.time() - time_start)
 
     tr_loss[i] = tr_res['loss']
     tr_nll[i] = tr_res['nll']
