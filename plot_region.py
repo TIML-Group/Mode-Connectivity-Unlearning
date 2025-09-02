@@ -50,6 +50,10 @@ for file_name in os.listdir(base_dir):
     retain_acc = np.array(retain_acc)
     forget_acc = np.array(forget_acc)
 
+    '''
+    Based on our alignment principle in paper, load the results of original model.
+    For evaluation, load the results of the retraining model.
+    '''
     if args.unlearn_type == 'random':
         retrain_base = config[args.dataset][args.unlearn_type]['train']
         forget_base = config[args.dataset][args.unlearn_type]['val']
