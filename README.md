@@ -36,7 +36,8 @@ Mode-Connectivity-Unlearning
 ├─ data.py
 ├─ eval_curve.py
 ├─ plot_region.py
-├─ generate_weight_mask.py
+├─ generate_mask.py  # Generate a parameter mask for SalUn
+├─ generate_weight_mask.py  # Generate a parameter mask for MCU
 ├─ train.py
 ├─ unlern.py
 ├─ utils.py
@@ -71,13 +72,23 @@ python3 train.py --dir=./ckpt/ --dataset=CIFAR10 --unlearn_method=baseline --unl
 
 You may need to record the original model's training accuracy and validation accuracy. To use the implemented logging, you'll need a `wandb.ai` account. Alternatively, you can replace it with any logger of your preference.
 
+
 To get an unlearning model with one of the existing unlearning methods, use the following command:
+
 
 ```
 python3 train.py --dir=./ckpt/ --dataset=CIFAR10 --unlearn_method=retrain --unlearn_type=random --data_path=data --lr=0.01 --forget_ratio=0.1 --transform=ResNet --model=PreResNet110 --epochs=200 --seed=42
 ```
 
-To search a nonlinear pathway with our unlearning framework **MCU**, use the following command:
+To search a nonlinear pathway with our unlearning framework **MCU**, use the following commands:
+
+Generate a parameter mask first:
+
+```
+python3 generate_weight_mask.py --dataset=CIFAR10 --forget_ratio=0.01 --unlearn_type=random --data_path=data --transform=ResNet --model=PreResNet110 --original_pth=[original ckpt]
+```
+
+Search the nonlinear pathway:
 
 ```
 python3 train.py --dir=[save dir] \
@@ -121,7 +132,10 @@ python3 eval_curve.py --dir=[save dir] \
                  --ckpt=[curve ckpt]
 ```
 
-To find the optimal model and effective unlearning region, use `plot_region.py` with the pathway obtained from `eval_curve.py`.
+To plot effective unlearning region or get optimal $t$, use `plot_region.py` or `utils.find_optimal_t` with the results obtained from `eval_curve.py`.
+
+
+
 
 
 ## How to Cite
@@ -136,4 +150,6 @@ To find the optimal model and effective unlearning region, use `plot_region.py` 
 ```
 
 
+## Acknowledgment
+We acknowledge the publicly available codebase of [dnn-mode-connectivity](https://github.com/timgaripov/dnn-mode-connectivity).
 
