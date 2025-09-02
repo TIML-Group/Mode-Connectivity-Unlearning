@@ -8,6 +8,9 @@ import unlearn
 from torch.utils.data import DataLoader, Subset, dataset, Dataset, random_split
 import random
 import time
+from scipy.interpolate import interp1d
+
+
 
 def l2_regularizer(weight_decay):
     def regularizer(model):
@@ -167,6 +170,29 @@ def evaluate_acc(model, val_loader, device):
             total += total_
     torch.cuda.empty_cache()
     return corr/total
+
+
+def find_optimal_t(t, retain_acc_list, forget_acc_list, retain_base, forget_base):
+    """
+
+    :param t: t list corresponding to retain_acc_list and forget_acc_list
+    :param retain_acc_list: obtained from eval_curve.py
+    :param forget_acc_list: obtained from eval_curve.py
+    :param retain_base: See the alignment principle in the paper
+    :param forget_base: See the alignment principle in the paper
+    :return: optimal t
+    """
+    t_dense = np.linspace(0.75, 1.0, 26)
+    interpolator = interp1d(t, retain_acc_list, kind='cubic')
+    retain_acc_dense = interpolator(t_dense)
+    interpolator = interp1d(t, forget_acc_list, kind='cubic')
+    forget_acc_dense = interpolator(t_dense)
+
+    retain_gap_ = retain_acc_dense-[retain_base]*len(t_dense)
+    forget_gap_ = forget_acc_dense-[forget_base]*len(t_dense)
+    avg_gap_dense = (abs(retain_gap_)+abs(forget_gap_))/2
+    optimal_t = np.argmin(avg_gap_dense)
+    return optimal_t
 
 
 """for SCRUB: imported from https://github.com/HobbitLong/RepDistiller"""
