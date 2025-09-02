@@ -38,9 +38,7 @@ if __name__ == '__main__':
     elif args.unlearn_method not in ['curve', 'dynamic']:
         dir = f'{args.dir}{args.unlearn_method}/seed{args.seed}_beta{args.beta}_lr{args.lr}/'
     else:
-        # dir = args.dir + '{}_{}_{}_{}_epoch{}_beta{}_mask{}_retain{}'.format(args.model, args.dataset, args.unlearn_method, args.unlearn_type, args.epochs, args.beta, args.mask_ratio, args.retain_ratio)
         dir = f'{args.dir}{args.unlearn_method}_epoch{args.epochs}_mask{args.mask_ratio}_kr{args.kr}_retain{args.retain_ratio}_beta{args.beta}_seed{args.seed}/'
-        # dir = f'{args.dir}seed_{args.slseed}/'
 
     if not os.path.exists(dir):
         os.makedirs(dir, exist_ok=True)
@@ -88,15 +86,9 @@ if __name__ == '__main__':
 
             new_state_dict = {}
             for v_i, v in checkpoint_original['model_state'].items():
-                new_key = v_i.replace("module.", "")  # 去掉 "module." 前缀
+                new_key = v_i.replace("module.", "")
                 new_state_dict[new_key] = v
             model.load_state_dict(new_state_dict)
-
-            # train_retain_acc = utils.evaluate_acc(model, loaders['train_retain'], device)
-            # train_forget_acc = utils.evaluate_acc(model, loaders['train_forget'], device)
-            # test_retain_acc = utils.evaluate_acc(model, loaders['test_retain'], device)
-            #
-            # print('========================= original_acc', train_retain_acc, train_forget_acc, test_retain_acc)
 
         if args.mask_path is not None:
             mask = torch.load(args.mask_path)
@@ -113,7 +105,6 @@ if __name__ == '__main__':
                     else:
                         mask[name_i] = 0
 
-            # parameters_list = [key for key, value in mask.items() if value == 1]
 
         curve = getattr(curves, args.curve)
 
@@ -135,7 +126,7 @@ if __name__ == '__main__':
                     checkpoint = torch.load(path)
                     new_state_dict = {}
                     for v_i, v in checkpoint['model_state'].items():
-                        new_key = v_i.replace("module.", "")  # 去掉 "module." 前缀
+                        new_key = v_i.replace("module.", "")
                         new_state_dict[new_key] = v
                     base_model.load_state_dict(new_state_dict)
                     base_model.to(device)
@@ -176,15 +167,13 @@ if __name__ == '__main__':
     )
 
     if args.milestones:
-        milestones = np.array(args.milestones.split(',')).astype(int)  # [82,122,163]
+        milestones = np.array(args.milestones.split(',')).astype(int)
         scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=milestones, gamma=0.1, last_epoch=-1)
     else:
         scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.epochs)
 
-    # proj_name = '{}_{}_{}_{}_randomlabel_end_ablation'.format(args.model, args.dataset, args.unlearn_method, args.unlearn_type)
     proj_name = '{}_{}_{}_{}{}_seed2'.format(args.model, args.dataset, args.unlearn_method, args.unlearn_type, int(args.forget_ratio*100))
     watermark = "s{}_lr{}_b{}".format(args.seed, args.lr, args.beta)
-    # watermark = "s{}_lr{}".format(args.seed_10, args.lr)
 
     wandb.init(project=proj_name, name=watermark)
     wandb.config.update(args)

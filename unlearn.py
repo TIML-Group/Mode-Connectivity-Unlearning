@@ -66,11 +66,12 @@ def training_step_ga_plus(model, batch, criterion, beta):
 
 
 def training_step_dynamic(model, batch, criterion, args):
+    '''based on our alignment principle, load the results of baseline model'''
     if args.unlearn_type == 'random':
-        retrain_base = config[args.dataset][args.unlearn_type]['retain']
+        retrain_base = config[args.dataset][args.unlearn_type]['train']
         forget_base = config[args.dataset][args.unlearn_type]['val']
     elif args.unlearn_type == 'class':
-        retrain_base = config[args.dataset][args.unlearn_type]['retain']
+        retrain_base = config[args.dataset][args.unlearn_type]['train']
         forget_base = 0.00
 
     device = next(model.parameters()).device
@@ -95,6 +96,7 @@ def training_step_dynamic(model, batch, criterion, args):
     else:
         _, _, forget_acc = _,_,forget_base
 
+    '''adaptive beta'''
     if forget_acc <= forget_base:
         beta = 0
     elif forget_acc > forget_base and (forget_acc-forget_base)/forget_base < (retain_acc-retrain_base)/retrain_base:
@@ -159,12 +161,11 @@ def fit_one_cycle(
                 if param.grad is not None:
                     param.grad *= mask[name_]
 
-        # optimizer.step()
         lr = optimizer.param_groups[0]['lr']
         if args.unlearn_method in ['temp']:
-            with torch.no_grad():  # 3. 手动更新参数（代替 optimizer.step()）
+            with torch.no_grad():
                 for param, grad in zip(parameters_list, grads):
-                    param.data.sub_(lr * grad)  # 直接修改 param 的值
+                    param.data.sub_(lr * grad)
         else:
             optimizer.step()
 
@@ -179,8 +180,6 @@ def fit_one_cycle(
     time_end = time.time()
 
     scheduler.step()
-
-    # print(f'time_forward_2:{time_forward_2}, time_forward:{time_forward}, time_backward{time_backward}')
 
     return loss_sum/test_size, beta
 
