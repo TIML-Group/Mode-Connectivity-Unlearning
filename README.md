@@ -4,7 +4,7 @@
 [![MUGen @ ICML 2025](https://img.shields.io/badge/MUGen@ICML-2025-blue)](https://openreview.net/forum?id=1PI440bNt5)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This is the official repo for the paper [MCU: Improving Machine Unlearning through Mode Connectivity](https://arxiv.org/abs/2505.10859).
+This is the official repo for the paper [Exploring Nonlinear Pathway in Parameter Space for Machine Unlearning](https://arxiv.org/abs/2505.10859).
 
 
 
