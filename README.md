@@ -9,7 +9,7 @@ This is the official repo for the paper [Exploring Nonlinear Pathway in Paramete
 
 
 ##  News 
-- [x] [2026.04] 👏👏 Accepted by [**ICML 2026**](https://openreview.net/forum?id=SaUgHTz5Yo&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICML.cc%2F2026%2FConference%2FAuthors%23your-submissions)).
+- [x] [2026.04] 👏👏 Accepted by [**ICML 2026**](https://openreview.net/forum?id=SaUgHTz5Yo).
 - [x] [2025.06] 👏👏 Accepted by [**MuGen @ ICML 2025**](https://openreview.net/forum?id=1PI440bNt5).
 - [x] [2025.05] 🚀🚀 Release the [**paper**](https://arxiv.org/abs/2505.10859).
 
