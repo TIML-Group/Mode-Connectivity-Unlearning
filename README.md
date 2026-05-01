@@ -1,7 +1,7 @@
 # Exploring Nonlinear Pathway in Parameter Space for Machine Unlearning
 
 [![preprint](https://img.shields.io/badge/arXiv-2505.10859-B31B1B)](https://arxiv.org/abs/2505.10859) 
-[![MUGen @ ICML 2025](https://img.shields.io/badge/MUGen@ICML-2025-blue)](https://openreview.net/forum?id=1PI440bNt5)
+[![ICML 2026](https://img.shields.io/badge/ICML-2026-blue)](https://openreview.net/group?id=ICML.cc/2026)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This is the official repo for the paper [Exploring Nonlinear Pathway in Parameter Space for Machine Unlearning](https://arxiv.org/abs/2505.10859).
