@@ -1,4 +1,4 @@
-# MCU: Improving Machine Unlearning through Mode Connectivity
+# Exploring Nonlinear Pathway in Parameter Space for Machine Unlearning
 
 [![preprint](https://img.shields.io/badge/arXiv-2505.10859-B31B1B)](https://arxiv.org/abs/2505.10859) 
 [![MUGen @ ICML 2025](https://img.shields.io/badge/MUGen@ICML-2025-blue)](https://openreview.net/forum?id=1PI440bNt5)
@@ -9,6 +9,7 @@ This is the official repo for the paper [MCU: Improving Machine Unlearning throu
 
 
 ##  News 
+- [x] [2026.04] 👏👏 Accepted by [**ICML 2026**](https://openreview.net/forum?id=SaUgHTz5Yo&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICML.cc%2F2026%2FConference%2FAuthors%23your-submissions)).
 - [x] [2025.06] 👏👏 Accepted by [**MuGen @ ICML 2025**](https://openreview.net/forum?id=1PI440bNt5).
 - [x] [2025.05] 🚀🚀 Release the [**paper**](https://arxiv.org/abs/2505.10859).
 
